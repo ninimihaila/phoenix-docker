@@ -12,14 +12,20 @@ config :phx_app, PhxApp.Repo,
   username: "postgres",
   password: "postgres",
   database: "phx_app_test#{System.get_env("MIX_TEST_PARTITION")}",
-  hostname: "localhost",
+  hostname: "db",
   pool: Ecto.Adapters.SQL.Sandbox
 
-# We don't run a server during test. If one is required,
-# you can enable the server option below.
+# Since we'll be using Wallaby with Phoenix and Ecto, we need to set up some configuration, so that (a) Phoenix runs a server during tests, and (b) Phoenix and Ecto use Ecto's sandbox for concurrent tests.
 config :phx_app, PhxAppWeb.Endpoint,
   http: [port: 4002],
-  server: false
+  server: true
+
+# We'll only want to use Ecto's sandbox in tests, so set the following configuration that we'll use in the next step:
+config :phx_app, :sql_sandbox, true
+
+# wallaby configurations
+config :wallaby, screenshot_on_failure: true
+config :wallaby, driver: Wallaby.Chrome
 
 # Print only warnings and errors during test
 config :logger, level: :warn
