@@ -24,8 +24,9 @@ config :phx_app, PhxAppWeb.Endpoint,
 config :phx_app, :sql_sandbox, true
 
 # wallaby configurations
-config :wallaby, screenshot_on_failure: true
-config :wallaby, driver: Wallaby.Chrome
+config :wallaby,
+  screenshot_on_failure: true,
+  driver: Wallaby.Chrome
 
 # Print only warnings and errors during test
 config :logger, level: :warn
