@@ -4,6 +4,9 @@ defmodule PhxAppWeb.FeatureCase do
   using do
     quote do
       use Wallaby.DSL
+
+      import PhxApp.Factory
+
       alias PhxAppWeb.Router.Helpers, as: Routes
 
       @endpoint PhxAppWeb.Endpoint

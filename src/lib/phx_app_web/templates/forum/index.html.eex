@@ -1,0 +1,8 @@
+<h1 class="title">Welcome to Forum!</h1>
+
+
+<ul>
+    <%= for forum <- @forums do %>
+    <li data-role="forum"><%= forum.name %></li>
+    <% end %>
+</ul>
