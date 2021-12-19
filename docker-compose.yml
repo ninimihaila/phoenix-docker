@@ -1,14 +1,17 @@
-# Version of docker-compose
-version: "3"
+version: "3.8"
 
-# Containers we are going to run
 services:
-  # Our Phoenix container
   phoenix:
-    # The build parameters for this container.
     build:
-      # Here we define that it should build from the current directory
       context: .
+      dockerfile: Dockerfile
+      args:
+        # Elixir Version: 1.9, 1.10, 1.10.4, ...
+        ELIXIR_VERSION: "1.13.1"
+        # Phoenix Version: 1.4.17, 1.5.4, ...
+        PHOENIX_VERSION: "1.6.2"
+        # Node Version: 10, 11, ...
+        NODE_VERSION: "16.7.0"
     environment:
       # Variables to connect to our Postgres server
       PGUSER: postgres
@@ -24,9 +27,14 @@ services:
     depends_on:
       - db
     # you need to enable sharing in the windows docker app
-    volumes:
-      - ./src:/app
-    tty: true
+    # volumes:
+    #   - ./src:/app
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    # network_mode: service:db
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
   db:
     # We use the predefined Postgres image
     image: postgres:latest
@@ -36,12 +44,12 @@ services:
       POSTGRES_PASSWORD: postgres
       # POSTGRES_DB: database_name
       # Set a path where Postgres should store the data
-      PGDATA: /var/lib/postgresql/data/pgdata
-    restart: always
+      # PGDATA: /var/lib/postgresql/data/pgdata
+    restart: unless-stopped
     # ports:
     #   - 5432:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
 # Define the volumes
 volumes:
-  pgdata:
+  pgdata: null
