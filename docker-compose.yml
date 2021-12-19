@@ -10,16 +10,8 @@ services:
         ELIXIR_VERSION: "1.13.1"
         # Phoenix Version: 1.4.17, 1.5.4, ...
         PHOENIX_VERSION: "1.6.2"
-        # Node Version: 10, 11, ...
+        # Node Version: 16.7.0, 17.3.0, ...
         NODE_VERSION: "16.7.0"
-    environment:
-      # Variables to connect to our Postgres server
-      PGUSER: postgres
-      PGPASSWORD: postgres
-      # PGDATABASE: database_name
-      PGPORT: 5432
-      # Hostname of our Postgres container
-      PGHOST: db
     # Mapping the port to make the Phoenix app accessible outside of the container
     ports:
       - 4000:4000
@@ -27,13 +19,12 @@ services:
     depends_on:
       - db
     # you need to enable sharing in the windows docker app
-    # volumes:
-    #   - ./src:/app
-    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
-    # network_mode: service:db
-
+    volumes:
+      # - ..:/workspace:cached
+      - ..:/app
     # Overrides default command so things don't shut down after the process ends.
-    command: sleep infinity
+    # command: sleep infinity
+    tty: true
 
   db:
     # We use the predefined Postgres image
@@ -43,13 +34,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       # POSTGRES_DB: database_name
-      # Set a path where Postgres should store the data
-      # PGDATA: /var/lib/postgresql/data/pgdata
     restart: unless-stopped
-    # ports:
-    #   - 5432:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
 # Define the volumes
 volumes:
-  pgdata: null
+  pgdata: 

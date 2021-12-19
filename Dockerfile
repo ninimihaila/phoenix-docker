@@ -1,4 +1,7 @@
 ARG ELIXIR_VERSION="1.13.1"
+ARG NODE_VERSION="17.3.0"
+ARG PHOENIX_VERSION="1.6.2"
+
 FROM elixir:${ELIXIR_VERSION}-alpine
 
 # RUN mkdir assets
@@ -7,23 +10,15 @@ WORKDIR /app
 
 # install other OS dependencies
 RUN apk add --update \
+  alpine-sdk \
+  npm \
+  bash \
   curl \
-  zsh \
   git \
   inotify-tools \
   xvfb \
   chromium \
   chromium-chromedriver
-
-RUN apk add --update \
-  npm \
-  bash
-
-# install Node
-ARG NODE_VERSION="latest"
-
-RUN chromedriver --version
-RUN node --version
 
 # setup virtual display for running tests in chromedriver
 # start xvfb automatically
@@ -39,7 +34,6 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 RUN rm -rf /var/cache/apk/*
 
 # install phoenix
-ARG PHOENIX_VERSION="1.6.2"
 RUN mix local.hex --force \
   && mix local.rebar --force \
   && mix archive.install --force hex phx_new ${PHOENIX_VERSION}
